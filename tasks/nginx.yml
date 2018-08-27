@@ -1,0 +1,33 @@
+---
+
+
+- name: Check if a potential SSL config exist for the considered Flask domain name
+  stat: path="/etc/nginx/snippets/{{ flask_domain_name }}.ssl.conf"
+  register: ssl_config_file
+
+- name: Check if acme_well_known config is there
+  stat: path="/etc/nginx/snippets/acme_well_known.conf"
+  register: acme_well_known_config_file
+
+- name: Create nginx sites config
+  template: src=nginx_site.conf.j2 dest=/etc/nginx/sites-available/{{ flask_name }}.conf
+  notify:
+    - nginx restart
+
+- name: Create symbolic links for sites config to enable sites
+  file:
+    path: "/etc/nginx/sites-enabled/{{ flask_name }}.conf"
+    state: link
+    src: "/etc/nginx/sites-available/{{ flask_name }}.conf"
+  notify:
+    - nginx restart
+
+- name: Create a .htpasswd file if applicable
+  htpasswd:
+    path: "/etc/nginx/.htpasswd_{{ flask_name }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    owner: root
+    group: www-data
+    mode: 0640
+  with_items: "{{ flask_htpasswd_users }}"

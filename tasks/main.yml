@@ -1,0 +1,15 @@
+---
+
+
+- include: system.yml
+
+- block:
+  - include: git.yml
+  - include: virtualenv.yml
+  - include: jsonsettings.yml
+
+  become: yes
+  become_user: "{{ flask_user }}"
+
+- include: uwsgi.yml
+- include: nginx.yml

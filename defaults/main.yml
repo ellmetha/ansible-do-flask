@@ -1,0 +1,111 @@
+---
+
+
+#-------------------------------------------------------------------------------
+# General
+#
+
+# The Flask project name. It is mainly used to generate project paths.
+flask_name: flask
+
+# User owning the Flask project.
+flask_user: "{{ flask_name }}"
+
+# Group owning the static/media directories. This is needed to grant access to specific http servers
+# (like nginx) to these directories.
+flasks_files_group: "www-data"
+
+# The python version that should be used to propulse the Flask application. It should correspond to
+# a python command name; eg. python2.7, python3, python3.6, etc.
+flask_python_version: python3
+
+# Local path to a key file to use to clone the Git repository of the project.
+flask_deploy_key_filepath: ""
+
+
+#-------------------------------------------------------------------------------
+# Paths
+#
+
+# Root directory where the Flask project will live.
+flask_path: "/webapps/{{ flask_name }}"
+
+# Path where static files will be stored (should correspond to the value of STATIC_ROOT).
+flask_static_path: "{{ flask_path }}/static"
+
+# Path where media files will be stored (should correspond to the value of MEDIA_ROOT).
+flask_media_path: "{{ flask_path }}/media"
+
+# Path where the Flask project will be cloned.
+flask_project_path: "{{ flask_path }}/project"
+
+# Path where the virtualenv of the project will be stored.
+flask_env_path: "{{ flask_path }}/.env"
+
+# Path to the requirements file to install when setuping the project.
+flask_requirements_file: "{{ flask_project_path }}/requirements.txt"
+
+# This path will be used to reload the WSGI application whenever it is "touched" (usefull in case of
+# python code changes). An empty value ('') should be used to disable touch-reloading.
+flask_touch_reload_path: "{{ flask_project_path }}"
+
+
+#-------------------------------------------------------------------------------
+# Git
+#
+
+# Git URL of the repository for the Flask project.
+flask_project_repo_url: ""
+
+# Branch to use when cloning the project.
+flask_project_repo_version: master
+
+
+#-------------------------------------------------------------------------------
+# Flask settings
+#
+
+# This variable is used to create a ".env.json" file at the root of the project folder. This file is
+# aimed to contain secret variables (like the content of the SECRET_KEY Flask setting).
+flask_jsonsettings_properties: {}
+
+# This variable can define some environment variable key/value pairs that should be set before
+# running the Flask application or any related command (a common use case would be to set the
+# FLASK_CONFIG variable in this dictionary).
+flask_env_variables: {}
+
+# Domain name under which the project will be served. It will notably end ep in nginx conf as
+# server_name.
+flask_domain_name: ""
+flask_extra_domain_names: []
+
+
+#-------------------------------------------------------------------------------
+# Other
+#
+
+# Ends up in "processes" uwsgi config.
+flask_uwsgi_process_count: 5
+
+# Allows to disallow robots by including the "disallow_robots" snippet provided by the nginx role.
+flask_disallow_robots: no
+
+# Allows to indicate if the nginx config should only answer to HTTP requests or not (by default SSL
+# is used and requests on port 80 are ignored).
+flask_disable_ssl: no
+
+# Allows to force http -> https redirection in the Nginx site configuration (this could be useful
+# if such redirection is not present in a potential catchall config).
+flask_force_https_redirect: no
+
+# Allows to configure httpasswd users to use to protect the Flask webapp using a basic HTTP
+# authentication. This will be used to created a .httpasswd file and to update the Flask app's
+# nginx config.
+flask_htpasswd_users: []
+_flask_htpasswd_users_example:
+  - name: test
+    password: dummy
+
+# Allows to limit the maximum allowed size of the client request body. This value goes to the
+# nginx's client_max_body_size option.
+flask_client_max_body_size: 50M

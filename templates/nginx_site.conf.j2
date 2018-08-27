@@ -1,0 +1,65 @@
+upstream {{ flask_name }} {
+    server unix://{{ flask_path }}/.wsgi.sock;
+}
+
+server {
+    {% if not flask_disable_ssl -%}
+    listen 443 ssl;
+    server_name {{ flask_domain_name }} {% for domain in flask_extra_domain_names|default([]) %}{{ domain }} {% endfor %};
+    {%- else %}
+    listen 80;
+    server_name {{ flask_domain_name }} {% for domain in flask_extra_domain_names|default([]) %}{{ domain }} {% endfor %};
+    {%- endif %}
+
+    {% if flask_client_max_body_size -%}
+    client_max_body_size {{ flask_client_max_body_size }};
+    {%- endif %}
+
+    {% if ssl_config_file.stat.exists -%}
+    include {{ ssl_config_file.stat.path }};
+    {%- else %}
+    include snippets/snakeoil.conf;
+    {%- endif %}
+
+    {% if flask_disallow_robots -%}
+    include snippets/disallow_robots.conf;
+    {%- endif %}
+
+    gzip on;
+    gzip_disable "msie6";
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_min_length 256;
+    gzip_types text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+
+    error_log /var/log/nginx/{{ flask_name }}_error.log;
+    access_log /var/log/nginx/{{ flask_name }}_access.log;
+
+    location /static/ {
+        expires 365d;
+        alias {{ flask_static_path }}/;
+    }
+
+    location /media/ {
+        alias {{ flask_media_path }}/;
+    }
+
+    location / {
+        uwsgi_pass  {{ flask_name }};
+        include     uwsgi_params;
+
+        {% if flask_htpasswd_users -%}
+        auth_basic "Restricted Content";
+        auth_basic_user_file /etc/nginx/.htpasswd_{{ flask_name }};
+        {%- endif %}
+
+        {% if flask_force_https_redirect -%}
+        if ($http_x_forwarded_proto != "https") {
+          rewrite ^(.*)$ https://$server_name$1 permanent;
+        }
+        {%- endif %}
+    }
+}

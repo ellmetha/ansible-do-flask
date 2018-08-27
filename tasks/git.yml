@@ -1,0 +1,16 @@
+---
+
+
+- name: Clone the git repository associated with the Flask project
+  git:
+    repo: "{{ flask_project_repo_url }}"
+    version: "{{ flask_project_repo_version }}"
+    dest: "{{ flask_project_path }}"
+    accept_hostkey: yes
+    recursive: no
+    force: yes
+    key_file: "{{ deploy_key_filepath|default('') }}"
+  register: gitclone
+
+- include: trigger_reload.yml
+  when: gitclone.changed
