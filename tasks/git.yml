@@ -12,5 +12,14 @@
     key_file: "{{ deploy_key_filepath|default('') }}"
   register: gitclone
 
+- name: Ensure that the project files can be accessed by the flask files group (www-data)
+  file:
+    path: "{{ flask_project_path }}"
+    state: directory
+    group: www-data
+    recurse: yes
+    mode: "u=rwX,g=rX,o="
+  changed_when: false
+
 - include: trigger_reload.yml
   when: gitclone.changed

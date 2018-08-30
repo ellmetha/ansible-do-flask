@@ -57,5 +57,3 @@
   file: path={{ item }} state=directory owner={{ flask_user }}
   with_items:
     - "{{ flask_path }}"
-    - "{{ flask_static_path }}"
-    - "{{ flask_media_path }}"

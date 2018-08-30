@@ -11,10 +11,6 @@ flask_name: flask
 # User owning the Flask project.
 flask_user: "{{ flask_name }}"
 
-# Group owning the static/media directories. This is needed to grant access to specific http servers
-# (like nginx) to these directories.
-flasks_files_group: "www-data"
-
 # The python version that should be used to propulse the Flask application. It should correspond to
 # a python command name; eg. python2.7, python3, python3.6, etc.
 flask_python_version: python3
@@ -32,9 +28,6 @@ flask_path: "/webapps/{{ flask_name }}"
 
 # Path where static files will be stored (should correspond to the value of STATIC_ROOT).
 flask_static_path: "{{ flask_path }}/static"
-
-# Path where media files will be stored (should correspond to the value of MEDIA_ROOT).
-flask_media_path: "{{ flask_path }}/media"
 
 # Path where the Flask project will be cloned.
 flask_project_path: "{{ flask_path }}/project"
