@@ -1,0 +1,8 @@
+---
+
+
+- name: Trigger a reload of the WSGI application
+  file:
+    path: "{{ flask_touch_reload_path }}"
+    state: touch
+  when: "flask_touch_reload_path != ''"
