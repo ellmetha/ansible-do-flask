@@ -39,12 +39,7 @@ server {
     access_log /var/log/nginx/{{ flask_name }}_access.log;
 
     location /static/ {
-        expires 365d;
         alias {{ flask_static_path }}/;
-    }
-
-    location /media/ {
-        alias {{ flask_media_path }}/;
     }
 
     location / {
