@@ -45,10 +45,11 @@
   apt_repository: repo="ppa:deadsnakes/ppa"
 
 - name: Install the python version required for the Flask application
-  apt: name="{{ item }}" state=present
-  with_items:
-    - "{{ flask_python_version }}"
-    - "{{ flask_python_version }}-dev"
+  apt:
+    state: present
+    name:
+      - "{{ flask_python_version }}"
+      - "{{ flask_python_version }}-dev"
 
 - name: Ensure that the required folders exist
   file: path={{ item }} state=directory owner={{ flask_user }}
