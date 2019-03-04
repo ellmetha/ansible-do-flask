@@ -32,16 +32,17 @@
   when: "flask_deploy_key_filepath != ''"
 
 - name: Install additional packages that could be required by the Flask app
-  apt: name={{ item }} state=present
-  with_items:
-    - gettext
-    - python3-venv
-    - uwsgi
-    - uwsgi-plugin-python
-    - uwsgi-plugin-python3
+  apt:
+    state: present
+    name:
+      - gettext
+      - python3-venv
+      - uwsgi
+      - uwsgi-plugin-python
+      - uwsgi-plugin-python3
 
 - name: Add Python's deadsnakes repository
-  apt_repository: repo="ppa:fkrull/deadsnakes"
+  apt_repository: repo="ppa:deadsnakes/ppa"
 
 - name: Install the python version required for the Flask application
   apt: name="{{ item }}" state=present
