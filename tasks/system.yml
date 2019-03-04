@@ -35,11 +35,7 @@
   apt: name={{ item }} state=present
   with_items:
     - gettext
-    - libav-tools
-    - libjpeg-dev
-    - libpng12-dev
     - python3-venv
-    - python-software-properties
     - uwsgi
     - uwsgi-plugin-python
     - uwsgi-plugin-python3
