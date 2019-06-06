@@ -7,6 +7,8 @@
   - include: git.yml
   - include: virtualenv.yml
   - include: jsonsettings.yml
+  - include: node_assets.yml
+    when: flask_node_assets_enabled
 
   become: yes
   become_user: "{{ flask_user }}"

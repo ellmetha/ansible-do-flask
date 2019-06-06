@@ -1,0 +1,9 @@
+---
+
+- name: Run NPM install
+  npm: path={{ flask_project_path }}
+
+- name: Build node assets
+  command: "{{ flask_node_assets_build_command }}"
+  args:
+    chdir: "{{ flask_project_path }}"
