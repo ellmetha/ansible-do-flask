@@ -1,6 +1,29 @@
 ---
 
 
+- name: Check whether the uWSGI plugin exists for the current Python version
+  stat:
+    path: "/usr/lib/uwsgi/plugins/{{ flask_python_version|replace('.', '') }}_plugin.so"
+  register: uwsgi_plugin_result
+
+- block:
+  - name: Compile the uWSGI plugin
+    shell: uwsgi --build-plugin "/usr/src/uwsgi/plugins/python {{ flask_python_version|replace('.', '') }}"
+
+  - name: Move the compiled uWSGI plugin to plugins location
+    shell: mv python37_plugin.so /usr/lib/uwsgi/plugins/{{ flask_python_version|replace('.', '') }}_plugin.so
+
+  - name: Set uWSGI plugin permissions
+    file:
+      path: "/usr/lib/uwsgi/plugins/{{ flask_python_version|replace('.', '') }}_plugin.so"
+      owner: root
+      group: root
+      mode: 0644
+
+  environment:
+    - PYTHON: "{{ flask_python_version }}"
+  when: uwsgi_plugin_result.stat.exists == False
+
 - name: Create a uWSGI config file for the Flask project
   template: src=uwsgi.ini.j2 dest={{ flask_path }}/uwsgi.ini
   register: wsgi_config
