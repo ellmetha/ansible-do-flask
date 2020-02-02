@@ -33,7 +33,7 @@ flask_static_path: "{{ flask_path }}/static"
 flask_project_path: "{{ flask_path }}/project"
 
 # Path where the virtualenv of the project will be stored.
-flask_env_path: "{{ flask_path }}/.env"
+flask_env_path: "{{ flask_path }}/.env_{{ flask_python_version }}"
 
 # Path to the requirements file to install when setuping the project.
 flask_requirements_file: "{{ flask_project_path }}/requirements.txt"
