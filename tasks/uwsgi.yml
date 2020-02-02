@@ -11,7 +11,7 @@
     shell: uwsgi --build-plugin "/usr/src/uwsgi/plugins/python {{ flask_python_version|replace('.', '') }}"
 
   - name: Move the compiled uWSGI plugin to plugins location
-    shell: mv python37_plugin.so /usr/lib/uwsgi/plugins/{{ flask_python_version|replace('.', '') }}_plugin.so
+    shell: mv {{ flask_python_version|replace('.', '') }}_plugin.so /usr/lib/uwsgi/plugins/{{ flask_python_version|replace('.', '') }}_plugin.so
 
   - name: Set uWSGI plugin permissions
     file:
